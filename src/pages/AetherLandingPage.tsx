@@ -4,6 +4,8 @@ import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "rec
 import { ArrowRight, ChevronRight, Menu, Sparkles, X } from "lucide-react";
 import ProductShowcase from "../components/aether/ProductShowcase";
 import DemoRequestForm from "../components/aether/DemoRequestForm";
+import { PortfolioReturnBanner, PortfolioReturnCta } from "../components/aether/PortfolioReturn";
+import { getCloudSightReturnUrl } from "../lib/cloudsight-return";
 import "../styles/aether.css";
 
 const trend = [
@@ -66,6 +68,7 @@ export default function AetherLandingPage() {
   const [activeSection, setActiveSection] = useState("platform");
   const [pageVisible, setPageVisible] = useState(true);
   const reduced = useReducedMotion();
+  const cloudSightReturnUrl = getCloudSightReturnUrl();
   useEffect(() => { const update = () => setPageVisible(!document.hidden); update(); document.addEventListener("visibilitychange", update); return () => document.removeEventListener("visibilitychange", update); }, []);
   useEffect(() => {
     const page = document.querySelector<HTMLElement>(".aether-page");
@@ -79,6 +82,7 @@ export default function AetherLandingPage() {
     return () => { anchors.forEach(anchor => anchor.removeEventListener("click", scrollToAnchor)); observer.disconnect(); };
   }, [reduced]);
   return <main className={`aether-page${pageVisible ? "" : " is-hidden"}`}>
+    {cloudSightReturnUrl && <PortfolioReturnBanner href={cloudSightReturnUrl} />}
     <motion.nav className="aether-nav" aria-label="Primary navigation" initial={reduced ? false : { opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .35, ease: [0.16, 1, .3, 1] }}><a className="brand" href="#top"><AetherMark /> AETHER</a><div className="nav-links"><a className={activeSection === "platform" ? "active" : ""} href="#platform">Platform</a><a className={activeSection === "product-experience" ? "active" : ""} href="#product-experience">Product</a><a className={activeSection === "outcomes" ? "active" : ""} href="#outcomes">Outcomes</a></div><div className="nav-actions"><span className="concept-label">Concept site</span><a className="nav-cta" href="#demo-request">Request demo <ArrowRight size={14}/></a><button onClick={() => setOpen(!open)} aria-label="Toggle navigation" aria-expanded={open} aria-controls="aether-mobile-menu">{open ? <X /> : <Menu />}</button></div>{open && <div className="mobile-menu" id="aether-mobile-menu"><a href="#platform" onClick={() => setOpen(false)}>Platform</a><a href="#product-experience" onClick={() => setOpen(false)}>Product</a><a href="#outcomes" onClick={() => setOpen(false)}>Outcomes</a><a href="#demo-request" onClick={() => setOpen(false)}>Request demo</a></div>}</motion.nav>
 
     <section className="hero" id="top"><div className="grid-orbit" /><div className="hero-ambient hero-ambient--one"/><div className="hero-ambient hero-ambient--two"/><div className="hero-copy"><motion.div className="eyebrow" initial={reduced ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .45, delay: .15, ease: [0.16, 1, .3, 1] }}><span /> YOUR DATA. ONE CLEAR VIEW.</motion.div><h1><motion.span className="hero-line" initial={reduced ? false : "hidden"} animate={reduced ? undefined : "show"} variants={{ show: { transition: { delayChildren: .22, staggerChildren: .085 } } }}><HeadlineWords text="Your business moves fast." /></motion.span><motion.i className="hero-line" initial={reduced ? false : "hidden"} animate={reduced ? undefined : "show"} variants={{ show: { transition: { delayChildren: .46, staggerChildren: .09 } } }}><HeadlineWords text="Your insights should too." /></motion.i></h1><motion.div initial={reduced ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .55, delay: .52, ease: [0.16, 1, .3, 1] }}><p>Stop jumping between spreadsheets, dashboards, and reports. AETHER brings everything together so you can see what's happening, spot opportunities, and make better decisions.</p><div className="hero-actions"><a className="button-light" href="#demo-request">Request a demo <ArrowRight size={16}/></a><a className="text-link" href="#product-experience">See it in action <ChevronRight size={15}/></a></div></motion.div></div><motion.div className="dashboard-wrap" initial={reduced ? false : { opacity: 0, y: 42, scale: .972 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: .9, delay: .64, ease: [0.16, 1, .3, 1] }}><Dashboard /></motion.div><div className="hero-note"><span>BUILT FOR TEAMS THAT WANT A CLEARER VIEW</span><div>ARC / <b>northstar</b> / VANTAGE / <i>FOUNDER'S</i></div></div></section>
@@ -93,6 +97,7 @@ export default function AetherLandingPage() {
 
     <DemoRequestForm />
     <section className="final-cta" id="contact"><div className="cta-noise"/><Reveal><div className="eyebrow"><span/> A clearer way forward</div><h2>Get a better read on<br/>your business.</h2><p>See how a shared view of the numbers can make your next decision easier.</p><a className="button-light" href="#demo-request">Request a demo <ArrowRight size={16}/></a></Reveal></section>
+    {cloudSightReturnUrl && <PortfolioReturnCta href={cloudSightReturnUrl} />}
     <footer id="resources"><div className="footer-brand"><a className="brand" href="#top"><AetherMark/> AETHER</a><p>A clearer view for growing businesses.</p></div><div className="footer-links"><div><span>PRODUCT</span><a href="#platform">Platform</a><a href="#product-experience">Product experience</a><a href="#outcomes">Outcomes</a></div><div><span>CONCEPT</span><a href="#demo-request">Request a demo</a><a href="#contact">Overview</a><span className="footer-concept">No live product or account access</span></div></div><div className="footer-bottom"><span>© 2026 AETHER — Concept experience</span><span>Privacy&nbsp;&nbsp; Terms</span></div></footer>
   </main>;
 }
